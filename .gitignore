@@ -1,0 +1,4 @@
+src/*.d
+src/*.o
+src/*.exe
+src/Union*
