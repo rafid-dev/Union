@@ -3,10 +3,12 @@
 #include <atomic>
 #include <cstdint>
 
+#include "types.hpp"
+
 namespace Search {
     struct Limits {
-        int32_t score = 0;
-        uint8_t depth = 0;
+        Value score = VALUE_NONE;
+        Depth depth = 0;
 
         std::atomic<uint64_t> nodes = false;
 

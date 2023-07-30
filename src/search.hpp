@@ -6,14 +6,25 @@
 
 namespace Search
 {
+    struct PvTable {
+        int pvLength[DEPTH_MAX];
+        chess::Move pvArray[DEPTH_MAX][DEPTH_MAX];
+    };
+
+    struct SearchStack {
+        chess::Move move = chess::Move(chess::Move::NO_MOVE);
+        Depth ply = 0;
+    };
 
     struct SearchThread
     {
         chess::Board board;
-        Search::Limits& limits;
-        Search::TimeMan tm;
+        Limits& limits;
+        TimeMan tm;
 
         uint64_t nodes_reached = 0;
+
+        PvTable pvTable;
 
         SearchThread(Limits& limits) : limits{limits} {}
 
@@ -26,22 +37,33 @@ namespace Search
         void makeMove(std::string& move);
         
         bool stopEarly();
+
+        void clear();
+        void init();
+
+        // Search functions
+        Value negamax(Value alpha, Value beta, Depth depth, SearchStack *ss);
+        void iterativeDeepening();
     };
 
-    inline void SearchThread::makeMove(chess::Move& move){
+    inline void SearchThread::makeMove(chess::Move &move)
+    {
         board.makeMove(move);
     }
 
-    inline void SearchThread::makeMove(std::string& moveStr){
+    inline void SearchThread::makeMove(std::string &moveStr)
+    {
         chess::Move move = chess::uci::uciToMove(board, moveStr);
         board.makeMove(move);
     }
 
-    inline void SearchThread::applyFen(std::string fen){
+    inline void SearchThread::applyFen(std::string fen)
+    {
         board.setFen(fen);
     }
 
-    inline Time SearchThread::startTime(){
+    inline Time SearchThread::startTime()
+    {
         return tm.start_time;
     }
 
@@ -65,4 +87,12 @@ namespace Search
         }
     }
 
+    inline void SearchThread::clear(){
+        nodes_reached = 0;
+    }
+
+    inline void SearchThread::init(){
+        clear();
+        tm.start_time = misc::tick();
+    }
 } // namespace Search
