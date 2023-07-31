@@ -85,6 +85,10 @@ namespace Search
 
     Value SearchThread::negamax(Value alpha, Value beta, Depth depth, SearchStack *ss)
     {
+        if (limits.stopped)
+        {
+            return 0;
+        }
 
         pvTable.pvLength[ss->ply] = ss->ply;
 
@@ -137,6 +141,11 @@ namespace Search
 
             board.unmakeMove(move);
 
+            if (limits.stopped)
+            {
+                return 0;
+            }
+
             if (value >= bestValue)
             {
                 bestValue = value;
@@ -160,11 +169,6 @@ namespace Search
                         break;
                     }
                 }
-            }
-
-            if (limits.stopped)
-            {
-                return 0;
             }
         }
 
