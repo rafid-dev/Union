@@ -52,7 +52,7 @@ namespace Search
 
                 Time maxtime = std::min<Time>(uci_time, basetime * 2);
                 stoptime_max = maxtime;
-                stoptime_opt = optime;
+                stoptime_opt = maxtime;
             }
             else if (movetime != TIME_UNSET)
             {

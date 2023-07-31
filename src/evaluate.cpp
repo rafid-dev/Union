@@ -63,8 +63,8 @@ namespace Evaluation
     {
         Value mobility = 0;
 
-        mobility += evaluateMobilitySide(board, Color::WHITE);
-        mobility -= evaluateMobilitySide(board, Color::BLACK);
+        mobility += evaluateMobilitySide(board, board.sideToMove());
+        mobility -= evaluateMobilitySide(board, ~board.sideToMove());
 
         return mobility;
     }

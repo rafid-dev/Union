@@ -2,3 +2,6 @@ src/*.d
 src/*.o
 src/*.exe
 src/Union*
+src/tests
+src/pgns
+src/binaries

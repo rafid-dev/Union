@@ -51,11 +51,14 @@ namespace Search
         init();
 
         Value score = VALUE_NONE;
+
         Time startingTime = startTime();
+        tm.set_time(board.sideToMove());
 
         Move bestmove = Move();
 
         SearchStack stack[DEPTH_MAX + 10], *ss = stack + 7;
+
 
         for (Depth depth = 1; depth <= limits.depth; depth++)
         {
@@ -112,7 +115,7 @@ namespace Search
 
         Value bestValue = -VALUE_INFINITE;
         Value oldAlpha = alpha;
-        Value value = VALUE_NONE;
+        Value value = -VALUE_INFINITE;
 
         Move bestmove = Move();
 
