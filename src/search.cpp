@@ -51,6 +51,7 @@ namespace Search
         init();
 
         Value score = VALUE_NONE;
+        Value last_score = VALUE_NONE;
 
         Time startingTime = startTime();
         tm.set_time(board.sideToMove());
@@ -69,11 +70,16 @@ namespace Search
 
             score = negamax<NodeType::PV>(-VALUE_INFINITE, VALUE_INFINITE, depth, ss);
 
+            if (!limits.stopped)
+            {
+                last_score = score;
+            }
+
             bestmove = pvTable.pvArray[0][0];
 
             uint64_t NPS = (uint64_t)(nodes_reached / ((misc::tick() - startingTime) / 1000.0));
 
-            std::cout << "info depth " << depth << " score cp " << score << " time " << (misc::tick() - startingTime) << " nps " << NPS << " nodes " << nodes_reached << " pv ";
+            std::cout << "info depth " << depth << " score cp " << last_score << " time " << (misc::tick() - startingTime) << " nps " << NPS << " nodes " << nodes_reached << " pv ";
 
             for (int i = 0; i < pvTable.pvLength[0]; i++)
             {
