@@ -6,13 +6,15 @@
 
 namespace Search
 {
+    enum class NodeType : uint8_t { ROOT, PV, NON_PV };
+
     struct PvTable {
-        int pvLength[DEPTH_MAX];
+        std::array<int, DEPTH_MAX> pvLength;
         chess::Move pvArray[DEPTH_MAX][DEPTH_MAX];
     };
 
     struct SearchStack {
-        chess::Move move = chess::Move(chess::Move::NO_MOVE);
+        chess::Move move;
         Depth ply = 0;
     };
 
@@ -41,8 +43,11 @@ namespace Search
         void clear();
         void init();
 
-        // Search functions
+        // Search functions //
+
+        template<NodeType NT>
         Value negamax(Value alpha, Value beta, Depth depth, SearchStack *ss);
+
         void iterativeDeepening();
     };
 

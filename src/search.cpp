@@ -8,7 +8,7 @@ namespace Search
 {
     void scoreMoves(const Board &board, Movelist &list)
     {
-        for (std::size_t i = 0; i < list.size(); i++)
+        for (int i = 0; i < list.size(); i++)
         {
             Move &move = list[i];
 
@@ -67,7 +67,7 @@ namespace Search
                 break;
             }
 
-            score = negamax(-VALUE_INFINITE, VALUE_INFINITE, depth, ss);
+            score = negamax<NodeType::PV>(-VALUE_INFINITE, VALUE_INFINITE, depth, ss);
 
             bestmove = pvTable.pvArray[0][0];
 
@@ -83,6 +83,12 @@ namespace Search
         std::cout << "bestmove " << uci::moveToUci(bestmove) << std::endl;
     }
 
+    // Explicit Template Instantiation for SearchThread::negamax
+    template Value SearchThread::negamax<NodeType::ROOT>(Value alpha, Value beta, Depth depth, SearchStack *ss);
+    template Value SearchThread::negamax<NodeType::PV>(Value alpha, Value beta, Depth depth, SearchStack *ss);
+    template Value SearchThread::negamax<NodeType::NON_PV>(Value alpha, Value beta, Depth depth, SearchStack *ss);
+
+    template<NodeType NT>
     Value SearchThread::negamax(Value alpha, Value beta, Depth depth, SearchStack *ss)
     {
         if (limits.stopped)
@@ -102,7 +108,7 @@ namespace Search
             checkTime();
         }
 
-        bool isRoot = (ss->ply == 0);
+        constexpr bool isRoot = (NT == NodeType::ROOT);
 
         if (!isRoot)
         {
@@ -129,7 +135,7 @@ namespace Search
         {
             pickNextMove(i, list);
 
-            Move &move = list[i];
+            const Move &move = list[i];
 
             board.makeMove(move);
             nodes_reached++;
@@ -137,7 +143,7 @@ namespace Search
 
             (ss + 1)->ply = ss->ply + 1;
 
-            value = -negamax(-beta, -alpha, depth - 1, ss + 1);
+            value = -negamax<NodeType::PV>(-beta, -alpha, depth - 1, ss + 1);
 
             board.unmakeMove(move);
 
