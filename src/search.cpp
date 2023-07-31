@@ -71,7 +71,7 @@ namespace Search
 
             bestmove = pvTable.pvArray[0][0];
 
-            int NPS = (int)(nodes_reached / ((misc::tick() - startingTime) / 1000.0));
+            uint64_t NPS = (uint64_t)(nodes_reached / ((misc::tick() - startingTime) / 1000.0));
 
             std::cout << "info depth " << depth << " score cp " << score << " time " << (misc::tick() - startingTime) << " nps " << NPS << " nodes " << nodes_reached << " pv ";
 
