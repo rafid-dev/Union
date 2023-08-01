@@ -6,6 +6,10 @@
 
 namespace Search
 {
+    constexpr int CaptureScore = 9000000;
+    constexpr int Killer1Score = 8000000;
+    constexpr int Killer2Score = 7000000;
+
     enum class NodeType : uint8_t { ROOT, PV, NON_PV };
 
     struct PvTable {
@@ -15,6 +19,7 @@ namespace Search
 
     struct SearchStack {
         chess::Move move;
+        chess::Move killers[2];
         Depth ply = 0;
     };
 

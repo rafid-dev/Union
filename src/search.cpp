@@ -6,7 +6,7 @@ using namespace Evaluation;
 
 namespace Search
 {
-    void scoreMoves(const Board &board, Movelist &list)
+    void scoreMoves(const Board &board, Movelist &list, SearchStack *ss)
     {
         for (int i = 0; i < list.size(); i++)
         {
@@ -19,8 +19,16 @@ namespace Search
 
             if (capture)
             {
-                move.setScore(PieceValues[(int)victim] - PieceValues[(int)attacker]);
+                move.setScore(CaptureScore + PieceValues[(int)victim] - PieceValues[(int)attacker]);
             }
+
+            if (move.move() == ss->killers[0].move()){
+                move.setScore(Killer1Score);
+            }
+            else if (move.move() == ss->killers[1].move()){
+                move.setScore(Killer2Score);
+            }
+
         }
     }
 
@@ -160,7 +168,7 @@ namespace Search
 
         Movelist list;
         movegen::legalmoves<MoveGenType::ALL>(list, board);
-        scoreMoves(board, list);
+        scoreMoves(board, list, ss);
 
         Move bestmove = Move();
         int movesSearched = 0;
@@ -170,7 +178,7 @@ namespace Search
             pickNextMove(i, list);
 
             const Move &move = list[i];
-            const bool isQuiet = 
+            const bool isQuiet = !board.isCapture(move) && move.typeOf() != Move::PROMOTION;
 
             board.makeMove(move);
             nodes_reached++;
@@ -208,6 +216,11 @@ namespace Search
 
                     if (value >= beta)
                     {
+                        if (isQuiet){
+                            ss->killers[1] = ss->killers[0];
+                            ss->killers[0] = move;
+                        }
+
                         break;
                     }
                 }

@@ -80,3 +80,14 @@ Elo difference: 51.7 +/- 24.8, LOS: 100.0 %, DrawRatio: 19.6 %
 SPRT: llr 2.96 (100.5%), lbound -2.94, ubound 2.94 - H1 was accepted
 Finished match
 ```
+
+## Introduce killers in move ordering
+```
+Score of dev vs master: 107 - 25 - 26  [0.759] 158
+...      dev playing White: 53 - 9 - 17  [0.778] 79
+...      dev playing Black: 54 - 16 - 9  [0.741] 79
+...      White vs Black: 69 - 63 - 26  [0.519] 158
+Elo difference: 199.8 +/- 56.6, LOS: 100.0 %, DrawRatio: 16.5 %
+SPRT: llr 2.98 (101.2%), lbound -2.94, ubound 2.94 - H1 was accepted
+Finished match
+```
