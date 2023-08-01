@@ -6,6 +6,11 @@ using namespace Evaluation;
 
 namespace Search
 {
+    inline bool hasNonPawnMaterials(const Board& board){
+        const Color c = board.sideToMove();
+        return board.pieces(PieceType::KNIGHT, c) | board.pieces(PieceType::BISHOP, c) | board.pieces(PieceType::ROOK, c) | board.pieces(PieceType::QUEEN, c);    
+    }
+
     void scoreMoves(const Board &board, Movelist &list)
     {
         for (int i = 0; i < list.size(); i++)
@@ -13,6 +18,7 @@ namespace Search
             Move &move = list[i];
 
             const Piece attacker = board.at(move.from());
+            const Color pieceColor = board.color(attacker);
             const Piece victim = board.at(move.to());
             const bool capture = victim != Piece::NONE;
 
@@ -111,6 +117,11 @@ namespace Search
         }
 
         constexpr bool isRoot = (NT == NodeType::ROOT);
+        const bool inCheck = board.inCheck();
+        Value bestValue = -VALUE_INFINITE;
+        Value oldAlpha = alpha;
+        Value value = -VALUE_INFINITE;
+        Value eval = Evaluation::evaluate(board);
 
         if (!isRoot)
         {
@@ -120,17 +131,42 @@ namespace Search
             }
         }
 
+        // Null Move Pruning
+        if (!isRoot && depth >= 3 && !inCheck && eval >= beta && hasNonPawnMaterials(board) && (ss - 1)->move.move() != Move::NULL_MOVE)
+        {
+            board.makeNullMove();
+            nodes_reached++;
+            ss->move = Move(Move::NULL_MOVE);
+
+            (ss + 1)->ply = ss->ply + 1;
+
+            constexpr Depth R = 2;
+
+            Value nullValue = -negamax<NodeType::NON_PV>(-beta, -beta + 1, depth - 1 - R, ss + 1);
+
+            board.unmakeNullMove();
+
+            if (limits.stopped)
+            {
+                return 0;
+            }
+
+            if (nullValue >= beta)
+            {
+                if (nullValue > VALUE_IS_MATE){
+                    nullValue = beta;
+                }
+                
+                return nullValue;
+            }
+        }
+
+
         Movelist list;
         movegen::legalmoves<MoveGenType::ALL>(list, board);
-
         scoreMoves(board, list);
 
-        Value bestValue = -VALUE_INFINITE;
-        Value oldAlpha = alpha;
-        Value value = -VALUE_INFINITE;
-
         Move bestmove = Move();
-
         int movesSearched = 0;
 
         for (int i = 0; i < list.size(); i++)
@@ -142,6 +178,7 @@ namespace Search
             board.makeMove(move);
             nodes_reached++;
             movesSearched++;
+            ss->move = move;
 
             (ss + 1)->ply = ss->ply + 1;
 

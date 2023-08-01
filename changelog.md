@@ -47,3 +47,12 @@ Score of dev vs master: 94 - 24 - 44 [0.716] 162
 Elo difference: 160.7 +/- 48.8, LOS: 100.0 %, DrawRatio: 27.2 %
 SPRT: llr 2.97 (100.7%), lbound -2.94, ubound 2.94 - H1 was accepted
 Finished match
+
+Null Move Pruning
+Score of dev vs master: 232 - 147 - 118  [0.586] 497
+...      dev playing White: 133 - 58 - 58  [0.651] 249
+...      dev playing Black: 99 - 89 - 60  [0.520] 248
+...      White vs Black: 222 - 157 - 118  [0.565] 497
+Elo difference: 60.0 +/- 27.0, LOS: 100.0 %, DrawRatio: 23.7 %
+SPRT: llr 2.97 (100.8%), lbound -2.94, ubound 2.94 - H1 was accepted
+Finished match
