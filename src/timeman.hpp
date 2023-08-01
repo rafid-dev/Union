@@ -43,16 +43,14 @@ namespace Search
                 Time inc = (side == chess::Color::WHITE ? winc : binc);
                 uci_time -= safety_overhead;
 
-                uci_time /= 20;
-
-                Time time_slot = average_time = uci_time + inc;
+                Time time_slot = average_time = uci_time / 20 + inc;
                 Time basetime = (time_slot);
 
                 Time optime = basetime * 0.6;
 
                 Time maxtime = std::min<Time>(uci_time, basetime * 2);
                 stoptime_max = maxtime;
-                stoptime_opt = maxtime;
+                stoptime_opt = optime;
             }
             else if (movetime != TIME_UNSET)
             {
