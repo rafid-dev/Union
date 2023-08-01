@@ -106,7 +106,7 @@ namespace Search
 
         pvTable.pvLength[ss->ply] = ss->ply;
 
-        if (depth == 0)
+        if (depth <= 0)
         {
             return Evaluation::evaluate(board);
         }
@@ -118,6 +118,7 @@ namespace Search
 
         constexpr bool isRoot = (NT == NodeType::ROOT);
         const bool inCheck = board.inCheck();
+
         Value bestValue = -VALUE_INFINITE;
         Value oldAlpha = alpha;
         Value value = -VALUE_INFINITE;
@@ -140,7 +141,7 @@ namespace Search
 
             (ss + 1)->ply = ss->ply + 1;
 
-            constexpr Depth R = 2;
+            const Depth R = 2 + depth / 4 + (eval - beta)/200;
 
             Value nullValue = -negamax<NodeType::NON_PV>(-beta, -beta + 1, depth - 1 - R, ss + 1);
 
