@@ -23,3 +23,8 @@ constexpr Value VALUE_INFINITE = 30001;
 constexpr Value VALUE_NONE = 32002;
 
 constexpr Time TIME_UNSET = -1;
+
+inline bool hasNonPawnMaterials(const Board& board){
+    const Color c = board.sideToMove();
+    return board.pieces(PieceType::KNIGHT, c) | board.pieces(PieceType::BISHOP, c) | board.pieces(PieceType::ROOK, c) | board.pieces(PieceType::QUEEN, c);
+}

@@ -6,11 +6,6 @@ using namespace Evaluation;
 
 namespace Search
 {
-    inline bool hasNonPawnMaterials(const Board& board){
-        const Color c = board.sideToMove();
-        return board.pieces(PieceType::KNIGHT, c) | board.pieces(PieceType::BISHOP, c) | board.pieces(PieceType::ROOK, c) | board.pieces(PieceType::QUEEN, c);    
-    }
-
     void scoreMoves(const Board &board, Movelist &list)
     {
         for (int i = 0; i < list.size(); i++)
@@ -20,7 +15,7 @@ namespace Search
             const Piece attacker = board.at(move.from());
             const Color pieceColor = board.color(attacker);
             const Piece victim = board.at(move.to());
-            const bool capture = victim != Piece::NONE;
+            const bool capture = board.isCapture(move);
 
             if (capture)
             {
@@ -175,6 +170,7 @@ namespace Search
             pickNextMove(i, list);
 
             const Move &move = list[i];
+            const bool isQuiet = 
 
             board.makeMove(move);
             nodes_reached++;
