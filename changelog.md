@@ -91,3 +91,13 @@ Elo difference: 199.8 +/- 56.6, LOS: 100.0 %, DrawRatio: 16.5 %
 SPRT: llr 2.98 (101.2%), lbound -2.94, ubound 2.94 - H1 was accepted
 Finished match
 ```
+
+## Add optimal time
+```
+Score of dev vs master: 126 - 35 - 18 [0.754] 179
+... dev playing White: 78 - 7 - 6 [0.890] 91
+... dev playing Black: 48 - 28 - 12 [0.614] 88
+... White vs Black: 106 - 55 - 18 [0.642] 179
+Elo difference: 194.8 +/- 55.7, LOS: 100.0 %, DrawRatio: 10.1 %
+SPRT: llr 2.95 (100.2%), lbound -2.94, ubound 2.94 - H1 was accepted
+```
