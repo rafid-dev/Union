@@ -114,7 +114,7 @@ namespace Search
             return Evaluation::evaluate(board);
         }
 
-        if (!(nodes_reached & 1024))
+        if (!(nodes_reached & 1023))
         {
             checkTime();
         }
