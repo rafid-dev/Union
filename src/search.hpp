@@ -53,6 +53,9 @@ namespace Search
         template<NodeType NT>
         Value negamax(Value alpha, Value beta, Depth depth, SearchStack *ss);
 
+        template<NodeType NT>
+        Value qsearch(Value alpha, Value beta, SearchStack *ss);
+
         void iterativeDeepening();
     };
 

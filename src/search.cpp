@@ -19,9 +19,9 @@ namespace Search
 
             if (capture)
             {
-                move.setScore(CaptureScore + PieceValues[(int)victim] - PieceValues[(int)attacker]);
+                move.setScore(CaptureScore + PieceValues[(int)victim] * 1000 - PieceValues[(int)attacker]);
             }
-
+            
             if (move.move() == ss->killers[0].move()){
                 move.setScore(Killer1Score);
             }
@@ -36,7 +36,7 @@ namespace Search
     {
         Move temp = Move();
         int index = 0;
-        int bestscore = -VALUE_INFINITE;
+        int bestscore = 0;
         int bestnum = moveNum;
 
         for (index = moveNum; index < list.size(); ++index)
@@ -99,6 +99,80 @@ namespace Search
     template Value SearchThread::negamax<NodeType::PV>(Value alpha, Value beta, Depth depth, SearchStack *ss);
     template Value SearchThread::negamax<NodeType::NON_PV>(Value alpha, Value beta, Depth depth, SearchStack *ss);
 
+    // Explicit Template Instantiation for SearchThread::qsearch
+    template Value SearchThread::qsearch<NodeType::NON_PV>(Value alpha, Value beta, SearchStack *ss);
+    template Value SearchThread::qsearch<NodeType::PV>(Value alpha, Value beta, SearchStack *ss);
+
+    template<NodeType NT>
+    Value SearchThread::qsearch(Value alpha, Value beta, SearchStack *ss){
+
+        if (!(nodes_reached & 1024))
+        {
+            checkTime();
+        }
+
+        if (board.isRepetition())
+        {
+            return 0;
+        }
+
+        Value eval = Evaluation::evaluate(board);
+
+        if (ss->ply >= DEPTH_MAX){
+            return eval;
+        }
+
+        if (eval >= beta){
+            return eval;
+        }
+
+        if (eval > alpha){
+            alpha = eval;
+        }
+
+        Value bestValue = eval;
+        Value value = -VALUE_INFINITE;
+
+        Movelist list;
+        movegen::legalmoves<MoveGenType::CAPTURE>(list, board);
+
+        scoreMoves(board, list, ss);
+
+        for (int i = 0; i < list.size(); i++){
+
+            pickNextMove(i, list);
+            
+            const Move& move = list[i];
+
+            board.makeMove(move);
+            nodes_reached++;
+            (ss + 1)->ply = ss->ply + 1;
+            ss->move = move;
+
+            value = -qsearch<NT>(-beta, -alpha, ss + 1);
+
+            board.unmakeMove(move);
+
+            if (limits.stopped){
+                return 0;
+            }
+
+            if (value > bestValue){
+                bestValue = value;
+
+                if (value > alpha){
+                    alpha = value;
+
+                    if (value >= beta){
+                        return beta;
+                    }
+                }
+            }
+        }
+
+        return bestValue;
+    }
+
     template<NodeType NT>
     Value SearchThread::negamax(Value alpha, Value beta, Depth depth, SearchStack *ss)
     {
@@ -111,6 +185,7 @@ namespace Search
 
         if (depth <= 0)
         {
+            // return qsearch<NT>(alpha, beta, ss);
             return Evaluation::evaluate(board);
         }
 
@@ -132,6 +207,10 @@ namespace Search
             if (board.isRepetition())
             {
                 return 0;
+            }
+
+            if (ss->ply >= DEPTH_MAX){
+                return eval;
             }
         }
 
