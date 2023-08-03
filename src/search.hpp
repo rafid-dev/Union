@@ -49,6 +49,7 @@ namespace Search
         void init();
 
         // Search functions //
+        Value qsearch(Value alpha, Value beta, SearchStack *ss);
 
         template<NodeType NT>
         Value negamax(Value alpha, Value beta, Depth depth, SearchStack *ss);

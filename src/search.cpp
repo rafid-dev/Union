@@ -121,7 +121,7 @@ namespace Search
 
         if (depth <= 0)
         {
-            return Evaluation::evaluate(board);
+            return qsearch(alpha, beta, ss);
         }
 
         if (!(nodes_reached & 1023))
@@ -246,6 +246,91 @@ namespace Search
             else
             {
                 return 0;
+            }
+        }
+
+        return bestValue;
+    }
+
+    Value SearchThread::qsearch(Value alpha, Value beta, SearchStack *ss)
+    {
+        if (limits.stopped)
+        {
+            return 0;
+        }
+
+        if (!(nodes_reached & 1023))
+        {
+            checkTime();
+        }
+
+        const bool inCheck = board.inCheck();
+
+        Value bestValue = -VALUE_IS_MATE + ss->ply;
+        Value oldAlpha = alpha;
+        Value value = -VALUE_INFINITE;
+        Value eval = Evaluation::evaluate(board);
+
+        if (!inCheck) // Stand pat
+        {
+            alpha = std::max(alpha, eval);
+            bestValue = std::max(bestValue, eval);
+            if (bestValue >= beta)
+            {
+                return bestValue;
+            }
+        }
+
+        Movelist list;
+        if (inCheck)
+        {
+            movegen::legalmoves<MoveGenType::ALL>(list, board);
+        }
+        else
+        {
+            movegen::legalmoves<MoveGenType::CAPTURE>(list, board);
+        }
+        scoreMoves(board, list, ss);
+
+        Move bestmove = Move();
+        int movesSearched = 0;
+
+        for (int i = 0; i < list.size(); i++)
+        {
+            pickNextMove(i, list);
+
+            const Move &move = list[i];
+
+            board.makeMove(move);
+            nodes_reached++;
+            movesSearched++;
+            ss->move = move;
+
+            (ss + 1)->ply = ss->ply + 1;
+
+            value = -qsearch(-beta, -alpha, ss + 1);
+
+            board.unmakeMove(move);
+
+            if (limits.stopped)
+            {
+                return 0;
+            }
+
+            if (value > bestValue)
+            {
+                bestValue = value;
+
+                if (value >= alpha)
+                {
+                    alpha = value;
+                    bestmove = move;
+
+                    if (value >= beta)
+                    {
+                        break;
+                    }
+                }
             }
         }
 
