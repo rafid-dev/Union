@@ -206,7 +206,7 @@ namespace Search
                 return 0;
             }
 
-            if (value >= bestValue)
+            if (value > bestValue)
             {
                 bestValue = value;
 
