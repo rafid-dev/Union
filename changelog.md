@@ -132,3 +132,14 @@ Score of dev vs master: 56 - 1 - 6  [0.937] 63
 Elo difference: 467.5 +/- 171.2, LOS: 100.0 %, DrawRatio: 9.5 %
 SPRT: llr 2.96 (100.5%), lbound -2.94, ubound 2.94 - H1 was accepted
 ```
+
+## Fix qsearch and illegal move bug (don't check for checks bruh)
+```
+Score of dev vs master: 227 - 137 - 86  [0.600] 450
+...      dev playing White: 118 - 64 - 43  [0.620] 225
+...      dev playing Black: 109 - 73 - 43  [0.580] 225
+...      White vs Black: 191 - 173 - 86  [0.520] 450
+Elo difference: 70.4 +/- 29.4, LOS: 100.0 %, DrawRatio: 19.1 %
+SPRT: llr 3 (102.0%), lbound -2.94, ubound 2.94 - H1 was accepted
+Finished match
+```

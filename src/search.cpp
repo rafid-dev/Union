@@ -263,33 +263,23 @@ namespace Search
         {
             checkTime();
         }
-
-        const bool inCheck = board.inCheck();
-
+        
         Value bestValue = -VALUE_IS_MATE + ss->ply;
         Value oldAlpha = alpha;
         Value value = -VALUE_INFINITE;
         Value eval = Evaluation::evaluate(board);
 
-        if (!inCheck) // Stand pat
+        // Stand pat
+        alpha = std::max(alpha, eval);
+        bestValue = std::max(bestValue, eval);
+        if (bestValue >= beta)
         {
-            alpha = std::max(alpha, eval);
-            bestValue = std::max(bestValue, eval);
-            if (bestValue >= beta)
-            {
-                return bestValue;
-            }
+            return bestValue;
         }
 
         Movelist list;
-        if (inCheck)
-        {
-            movegen::legalmoves<MoveGenType::ALL>(list, board);
-        }
-        else
-        {
-            movegen::legalmoves<MoveGenType::CAPTURE>(list, board);
-        }
+        movegen::legalmoves<MoveGenType::CAPTURE>(list, board);
+        
         scoreMoves(board, list, ss);
 
         Move bestmove = Move();
