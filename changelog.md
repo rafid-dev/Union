@@ -101,3 +101,34 @@ Score of dev vs master: 126 - 35 - 18 [0.754] 179
 Elo difference: 194.8 +/- 55.7, LOS: 100.0 %, DrawRatio: 10.1 %
 SPRT: llr 2.95 (100.2%), lbound -2.94, ubound 2.94 - H1 was accepted
 ```
+
+## Fix location of time break in iterative deepening 
+```
+Score of dev vs master: 145 - 49 - 16  [0.729] 210
+...      dev playing White: 90 - 9 - 6  [0.886] 105
+...      dev playing Black: 55 - 40 - 10  [0.571] 105
+...      White vs Black: 130 - 64 - 16  [0.657] 210
+Elo difference: 171.5 +/- 50.7, LOS: 100.0 %, DrawRatio: 7.6 %
+SPRT: llr 2.96 (100.7%), lbound -2.94, ubound 2.94 - H1 was accepted
+```
+
+## (Change value >= bestValue to value > bestValue)
+Honestly I have no idea but SPRT says it's a bug 
+```
+Score of dev vs master: 104 - 1 - 6  [0.964] 111
+...      dev playing White: 53 - 0 - 2  [0.982] 55
+...      dev playing Black: 51 - 1 - 4  [0.946] 56
+...      White vs Black: 54 - 51 - 6  [0.514] 111
+Elo difference: 570.9 +/- 174.3, LOS: 100.0 %, DrawRatio: 5.4 %
+SPRT: llr 5.45 (185.2%), lbound -2.94, ubound 2.94 - H1 was accepted
+```
+
+## Add quiescence search
+```
+Score of dev vs master: 56 - 1 - 6  [0.937] 63
+...      dev playing White: 29 - 1 - 2  [0.938] 32
+...      dev playing Black: 27 - 0 - 4  [0.935] 31
+...      White vs Black: 29 - 28 - 6  [0.508] 63
+Elo difference: 467.5 +/- 171.2, LOS: 100.0 %, DrawRatio: 9.5 %
+SPRT: llr 2.96 (100.5%), lbound -2.94, ubound 2.94 - H1 was accepted
+```
