@@ -71,7 +71,7 @@ namespace Search
 
         for (Depth depth = 1; depth <= limits.depth; depth++)
         {
-            score = negamax<NodeType::PV>(-VALUE_INFINITE, VALUE_INFINITE, depth, ss);
+            score = negamax<NodeType::ROOT>(-VALUE_INFINITE, VALUE_INFINITE, depth, ss);
 
             if (limits.stopped || stopEarly())
             {
